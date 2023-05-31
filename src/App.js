@@ -8,6 +8,7 @@ import Missing from "./Missing";
 import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
+import { format } from "date-fns";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -45,6 +46,16 @@ function App() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const filteredResults = posts.filter(
+      (post) =>
+        post.body.toLowerCase().includes(search) ||
+        post.title.toLowerCase().includes(search)
+    );
+
+    setSearchResults(filteredResults.reverse());
+  }, [posts, search]);
+
   const handleDelete = (id) => {
     const postsList = posts.filter((post) => post.id !== id);
     setPosts(postsList);
@@ -53,12 +64,25 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const id = posts.length ? posts[posts.length - 1] + 1 : 1;
+    //npm install date-fns --save
+    const datetime = format(new Date(), "MMMM dd, yyyy pp");
+
+    const newPost = { id, title: postTitle, datetime, body: postBody };
+    const allPosts = [...posts, newPost];
+    setPosts(allPosts);
+    setPostTitle("");
+    setPostBody("");
+    navigate("/");
   };
 
   return (
     <Routes>
-      <Route element={<Layout />} path="/">
-        <Route index element={<Home posts={posts} />} />
+      <Route
+        element={<Layout search={search} setSearch={setSearch} />}
+        path="/"
+      >
+        <Route index element={<Home posts={searchResults} />} />
 
         <Route path="post">
           <Route
