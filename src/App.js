@@ -9,34 +9,10 @@ import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import { format } from "date-fns";
+import api from "./api/posts";
 
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: "React Router",
-      body: "React Router is a collection of navigational components that compose declaratively with your application.",
-      datetime: "July 26, 2021 11:17:00 AM",
-    },
-    {
-      id: 2,
-      title: "React.js",
-      body: "React is a JavaScript library for building user interfaces. It is maintained by Facebook and a community of individual developers and companies.",
-      datetime: "July 26, 2021 12:17:00 AM",
-    },
-    {
-      id: 3,
-      title: "React Hooks",
-      body: "Hooks are a new addition in React 16.8. They let you use state and other React features without writing a class.",
-      datetime: "July 26, 2021 10:17:00 AM",
-    },
-    {
-      id: 4,
-      title: "React Context",
-      body: "Context provides a way to pass data through the component tree without having to pass props down manually at every level.",
-      datetime: "July 26, 2021 09:17:00 AM",
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState([]);
 
   const [searchResults, setSearchResults] = useState([]);
@@ -45,6 +21,26 @@ function App() {
   const [postBody, setPostBody] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get("/posts");
+        setPosts(response.data);
+      } catch (err) {
+        if (err.response) {
+          //Not in the 200 response range
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     const filteredResults = posts.filter(
