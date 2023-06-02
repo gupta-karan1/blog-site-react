@@ -21,8 +21,8 @@
     {
       "id": 4,
       "title": "React Context",
-      "body": "Context provides a way to pass data through the component tree without having to pass props down manually at every level.",
-      "datetime": "July 26, 2021 09:17:00 AM"
+      "datetime": "June 02, 2023 7:00:01 PM",
+      "body": "Context provides a way to pass data through the component tree without having to pass props down manually at every level."
     }
   ]
 }
