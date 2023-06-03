@@ -11,6 +11,7 @@ import Layout from "./Layout";
 import { format } from "date-fns";
 import api from "./api/posts";
 import EditPost from "./Edit.js";
+import useWindowSize from "./hooks/useWindowSize";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -25,6 +26,8 @@ function App() {
   const [editBody, setEditBody] = useState("");
 
   const navigate = useNavigate();
+
+  const { width } = useWindowSize();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -104,7 +107,7 @@ function App() {
   return (
     <Routes>
       <Route
-        element={<Layout search={search} setSearch={setSearch} />}
+        element={<Layout search={search} setSearch={setSearch} width={width} />}
         path="/"
       >
         <Route index element={<Home posts={searchResults} />} />
